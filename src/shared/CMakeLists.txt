@@ -305,3 +305,8 @@ SET_TARGET_PROPERTIES(shared PROPERTIES FOLDER "Game Libs")
 if (ENABLE_CPPTRACE)
   target_compile_definitions(shared PRIVATE ENABLE_CPPTRACE)
 endif()
+
+target_compile_definitions(shared
+    PUBLIC
+      $<$<BOOL:${SCRIPT_LIB_ELUNA}>:ENABLE_ELUNA>
+)

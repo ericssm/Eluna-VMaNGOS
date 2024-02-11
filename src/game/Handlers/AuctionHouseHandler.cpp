@@ -34,6 +34,9 @@
 #include "Chat.h"
 #include "Anticheat.h"
 
+#ifdef ENABLE_ELUNA
+#include "LuaEngine.h"
+#endif /* ENABLE_ELUNA */
 // please DO NOT use iterator++, because it is slower than ++iterator!!!
 // post-incrementation is always slower than pre-incrementation !
 
@@ -406,6 +409,9 @@ void WorldSession::HandleAuctionSellItem(WorldPackets::AuctionHouse::AuctionSell
     CharacterDatabase.CommitTransaction();
 
     SendAuctionCommandResult(AH, AUCTION_STARTED, AUCTION_OK);
+#ifdef ENABLE_ELUNA
+    sEluna->OnAdd(auctionHouse, AH);
+#endif /* ENABLE_ELUNA */
 }
 
 // this function is called when client bids or buys out auction
@@ -628,6 +634,10 @@ void WorldSession::HandleAuctionRemoveItem(WorldPackets::AuctionHouse::AuctionRe
     CharacterDatabase.CommitTransaction();
     sAuctionMgr.RemoveAItem(auction->itemGuidLow);
     auctionHouse->RemoveAuction(auction);
+    // Used by Eluna
+#ifdef ENABLE_ELUNA
+    sEluna->OnRemove(auctionHouse, auction);
+#endif /* ENABLE_ELUNA */
     delete auction;
 }
 

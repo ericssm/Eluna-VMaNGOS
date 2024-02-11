@@ -39,6 +39,10 @@
 #include "Utilities/Random.h"
 #include "ScriptMgr.h"
 
+#ifdef ENABLE_ELUNA
+#include "LuaEngine.h"
+#endif /* ENABLE_ELUNA */
+
 namespace MaNGOS
 {
 class BattleGroundBroadcastBuilder
@@ -650,6 +654,10 @@ int32 BattleGround::GetHeraldEntry() const
 
 void BattleGround::EndBattleGround(Team winner)
 {
+    #ifdef ENABLE_ELUNA
+        sEluna->OnBGEnd(this, GetTypeID(), GetInstanceID(), winner);
+    #endif /* ENABLE_ELUNA */
+    
     RemoveFromBGFreeSlotQueue();
 
     if (winner == ALLIANCE)
@@ -1037,6 +1045,9 @@ void BattleGround::StartBattleGround()
     // This must be done here, because we need to have already invited some players when first BG::Update() method is executed
     // and it doesn't matter if we call StartBattleGround() more times, because m_battleGrounds is a map and instance id never changes
     sBattleGroundMgr.AddBattleGround(GetInstanceID(), GetTypeID(), this);
+#ifdef ENABLE_ELUNA
+    sEluna->OnBGStart(this, GetTypeID(), GetInstanceID());
+#endif /* ENABLE_ELUNA */
 }
 
 void BattleGround::AddPlayer(Player* pPlayer)

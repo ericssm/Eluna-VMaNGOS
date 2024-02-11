@@ -578,6 +578,7 @@ include_directories(
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
   ${ZLIB_INCLUDE_DIRS}
+  $<$<BOOL:${SCRIPT_LIB_ELUNA}>:${SRC_GRP_ELUNA}>
 )
 
 if(WIN32)
@@ -616,8 +617,18 @@ source_group("Anticheat"
   REGULAR_EXPRESSION Anticheat
 )
 
+if(SCRIPT_LIB_ELUNA)
+    file(GLOB SRC_GRP_ELUNA 
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.h
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/VMangos/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/VMangos/*.h
+    )
+    source_group("Eluna" FILES ${SRC_GRP_ELUNA})
+endif()
 add_library(game STATIC
   ${game_SRCS}
+  $<$<BOOL:${SCRIPT_LIB_ELUNA}>:${SRC_GRP_ELUNA}>
 )
 mangos_target_flags(game)
 if(GAME_EXTRA_CXX_FLAGS)
@@ -630,6 +641,20 @@ target_link_libraries(game
   shared
   Detour
   g3dlite
+  $<$<BOOL:${SCRIPT_LIB_ELUNA}>:lualib>
+)
+target_compile_definitions(game
+    PUBLIC
+      $<$<BOOL:${SCRIPT_LIB_ELUNA}>:ENABLE_ELUNA>
+      $<$<BOOL:${SCRIPT_LIB_ELUNA}>:CLASSIC>
+      $<$<BOOL:${SCRIPT_LIB_ELUNA}>:VMANGOS>
+)
+target_include_directories(game
+    PUBLIC
+      $<$<BOOL:${SCRIPT_LIB_ELUNA}>:
+            ${CMAKE_SOURCE_DIR}/src/modules/Eluna
+            ${CMAKE_SOURCE_DIR}/src/modules/Eluna/VMangos
+        >
 )
 
 #add_dependencies(game revision.h)
@@ -663,4 +688,12 @@ else()
       ScriptMgr.h
       )
   endif()
+endif()
+
+
+if(SCRIPT_LIB_ELUNA)
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/src/modules/Eluna/extensions
+    DESTINATION ${BIN_DIR}/lua_scripts
+)
 endif()

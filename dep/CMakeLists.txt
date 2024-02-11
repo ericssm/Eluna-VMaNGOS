@@ -33,3 +33,7 @@ if (ENABLE_CPPTRACE)
     endif()
   endforeach()
 endif()
+
+if(SCRIPT_LIB_ELUNA)
+	add_subdirectory(lualib)
+endif()
