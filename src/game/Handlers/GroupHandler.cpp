@@ -32,6 +32,10 @@
 #include "SocialMgr.h"
 #include "Util.h"
 
+#ifdef ENABLE_ELUNA
+#include "LuaEngine.h"
+#endif
+
 /* differeces from off:
     -you can uninvite yourself - is is useful
     -you can accept invitation even if leader went offline
@@ -115,6 +119,12 @@ void WorldSession::HandleGroupInviteOpcode(WorldPackets::Group::GroupInvite cons
             return;
         }
     }
+
+#ifdef ENABLE_ELUNA
+      if (Eluna* e = sWorld.GetEluna())
+          if (!e->OnMemberAccept(group, GetPlayer()))
+              return;
+#endif
 
     // ok, but group not exist, start a new group
     // but don't create and save the group to the DB until

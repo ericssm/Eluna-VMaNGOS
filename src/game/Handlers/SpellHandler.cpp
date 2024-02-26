@@ -33,7 +33,7 @@
 
 #ifdef ENABLE_ELUNA
 #include "LuaEngine.h"
-#endif /* ENABLE_ELUNA */
+#endif
 
 using namespace Spells;
 
@@ -141,15 +141,11 @@ void WorldSession::HandleUseItemOpcode(WorldPackets::Spell::UseItem const& packe
     }
 
 #ifdef ENABLE_ELUNA
-	// Note: If script stop casting it must send appropriate data to client to prevent stuck item in gray state.
-	if (sEluna->OnUse(pUser, pItem, targets))
-	{
-		// no script or script not process request by self
-		pUser->CastItemUseSpell(pItem, const_cast<SpellCastTargets&>(packet.targets));
-	}
-#else
-		pUser->CastItemUseSpell(pItem, const_cast<SpellCastTargets&>(packet.targets));
+    if (Eluna* e = pUser->GetEluna())
+        if (!e->OnUse(pUser, pItem, const_cast<SpellCastTargets&>(packet.targets)))
+            return;
 #endif
+		pUser->CastItemUseSpell(pItem, const_cast<SpellCastTargets&>(packet.targets));
 }
 
 void WorldSession::HandleOpenItemOpcode(WorldPackets::Spell::OpenItem const& packet)

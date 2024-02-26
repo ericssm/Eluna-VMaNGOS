@@ -414,32 +414,31 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPackets::Npc::GossipSelec
         if (!sScriptMgr.OnGossipSelect(_player, pGo, sender, action, code))
             _player->OnGossipSelect(pGo, packet.gossipListId);
     }
-// Used by Eluna
 #ifdef ENABLE_ELUNA
-    else if (guid.IsItem())
+    else if (packet.guid.IsItem())
     {
-        Item* item = GetPlayer()->GetItemByGuid(guid);
+        Item* item = GetPlayer()->GetItemByGuid(packet.guid);
         if (!item)
         {
-            sLog.Out(LOG_BASIC, LOG_LVL_DEBUG, "WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", guid.GetString().c_str());
+            sLog.Out(LOG_BASIC, LOG_LVL_DEBUG, "WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", packet.guid.GetString().c_str());
             return;
         }
 
-        sEluna->HandleGossipSelectOption(GetPlayer(), item, GetPlayer()->PlayerTalkClass->GossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(gossipListId), code);
-
+        if (Eluna* e = GetPlayer()->GetEluna())
+            e->HandleGossipSelectOption(GetPlayer(), item, GetPlayer()->PlayerTalkClass->GossipOptionSender(packet.gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(packet.gossipListId), code);
     }
-    else if (guid.IsPlayer())
+    else if (packet.guid.IsPlayer())
     {
-        if (GetPlayer()->GetGUIDLow() != guid)
+        if (GetPlayer()->GetGUIDLow() != packet.guid)
         {
-            sLog.Out(LOG_BASIC, LOG_LVL_DEBUG, "WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", guid.GetString().c_str());
+            sLog.Out(LOG_BASIC, LOG_LVL_DEBUG, "WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", packet.guid.GetString().c_str());
             return;
         }
 
-        sEluna->HandleGossipSelectOption(GetPlayer(), GetPlayer()->PlayerTalkClass->GetGossipMenu().GetMenuId(), GetPlayer()->PlayerTalkClass->GossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(gossipListId), code);
-
+        if (Eluna* e = GetPlayer()->GetEluna())
+            e->HandleGossipSelectOption(GetPlayer(), GetPlayer()->PlayerTalkClass->GetGossipMenu().GetMenuId(), GetPlayer()->PlayerTalkClass->GossipOptionSender(packet.gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(packet.gossipListId), code);
     }
-#endif /* ENABLE_ELUNA */
+#endif
 
 }
 
