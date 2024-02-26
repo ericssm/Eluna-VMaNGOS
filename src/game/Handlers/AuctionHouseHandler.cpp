@@ -410,8 +410,9 @@ void WorldSession::HandleAuctionSellItem(WorldPackets::AuctionHouse::AuctionSell
 
     SendAuctionCommandResult(AH, AUCTION_STARTED, AUCTION_OK);
 #ifdef ENABLE_ELUNA
-    sEluna->OnAdd(auctionHouse, AH);
-#endif /* ENABLE_ELUNA */
+    if (Eluna* e = sWorld.GetEluna())
+        e->OnAdd(auctionHouse, AH);
+#endif
 }
 
 // this function is called when client bids or buys out auction
@@ -634,10 +635,10 @@ void WorldSession::HandleAuctionRemoveItem(WorldPackets::AuctionHouse::AuctionRe
     CharacterDatabase.CommitTransaction();
     sAuctionMgr.RemoveAItem(auction->itemGuidLow);
     auctionHouse->RemoveAuction(auction);
-    // Used by Eluna
 #ifdef ENABLE_ELUNA
-    sEluna->OnRemove(auctionHouse, auction);
-#endif /* ENABLE_ELUNA */
+    if (Eluna* e = sWorld.GetEluna())
+        e->OnRemove(auctionHouse, auction);
+#endif
     delete auction;
 }
 

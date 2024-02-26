@@ -67,7 +67,8 @@ void WorldSession::HandleRepopRequestOpcode(NullClientPacket const& /*packet*/)
     }
 
 #ifdef ENABLE_ELUNA
-    sEluna->OnRepop(GetPlayer());
+    if (Eluna* e = GetPlayer()->GetEluna())
+        e->OnRepop(GetPlayer());
 #endif
 
     _player->BuildPlayerRepop();

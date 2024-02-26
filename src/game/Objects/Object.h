@@ -40,6 +40,9 @@
 
 #include <memory>
 #include <string>
+#ifdef ENABLE_ELUNA
+#include "LuaValue.h"
+#endif
 
 class ServerPacket;
 class WorldPacket;
@@ -61,7 +64,8 @@ struct FactionEntry;
 struct FactionTemplateEntry;
 #ifdef ENABLE_ELUNA
 class ElunaEventProcessor;
-#endif /* ENABLE_ELUNA */
+class Eluna;
+#endif
 
 class NULLNotifier
 {
@@ -488,12 +492,7 @@ class WorldObject : public Object
                 WorldObject* const m_obj;
         };
 
-        virtual ~WorldObject () override {
-#ifdef ENABLE_ELUNA
-			delete elunaEvents;
-			elunaEvents = NULL;
-#endif /* ENABLE_ELUNA */
-		}
+        virtual ~WorldObject() override {}
 
         virtual void Update(uint32 /*update_diff*/, uint32 /*time_diff*/);
 
@@ -815,8 +814,12 @@ class WorldObject : public Object
 
 		
 #ifdef ENABLE_ELUNA
-		ElunaEventProcessor* elunaEvents;
-#endif /* ENABLE_ELUNA */  
+        ElunaEventProcessor* elunaEvents;
+
+        Eluna* GetEluna() const;
+
+        LuaVal lua_data = LuaVal({});
+#endif 
     protected:
         explicit WorldObject();
 
