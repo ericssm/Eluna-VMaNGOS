@@ -1060,10 +1060,6 @@ void Unit::Kill(Unit* pVictim, SpellEntry const* spellProto, bool durabilityLoss
         //{
             //sEluna->OnKillSelf(pPlayerVictim);
         //}
-    }else if(pCreatureVictim && pPlayerTap)
-    {
-        if (Eluna* e = pPlayerTap->GetEluna())
-            e->OnCreatureKill(pPlayerTap, pCreatureVictim);
     }
 #endif /* ENABLE_ELUNA */
 
@@ -1281,6 +1277,14 @@ void Unit::Kill(Unit* pVictim, SpellEntry const* spellProto, bool durabilityLoss
             if (BattleGround* bg = pPlayerTap->GetBattleGround())
                 bg->HandleKillUnit(pCreatureVictim, pPlayerTap);
     }
+
+#ifdef ENABLE_ELUNA
+    if (pCreatureVictim && pPlayerTap)
+    {
+        if (Eluna* e = pPlayerTap->GetEluna())
+            e->OnCreatureKill(pPlayerTap, pCreatureVictim);
+    }
+#endif
 
     pVictim->InterruptSpellsCastedOnMe(false, true);
 }
