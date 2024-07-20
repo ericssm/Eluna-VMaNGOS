@@ -2,8 +2,9 @@
 # Generic boolean options
 option(BUILD_FOR_HOST_CPU             "Build specifically for the host CPU via `-march=native` (might not run on different machines)" ON)
 option(USE_SCRIPTS                    "Build scripts"                                                                                 ON)
-option(BUILD_EXTRACTORS               "Build extractors"                                                                              OFF)
-option(BUILD_REALMMERGE               "Build helper tool for merging character databases"                                             OFF)
+option(SCRIPT_LIB_ELUNA               "Build Eluna LUA Script Engine"                                                                 ON)
+option(USE_EXTRACTORS                 "Build extractors"                                                                              OFF)
+option(USE_REALMMERGE                 "Build helper tool for merging character databases"                                             OFF)
 option(ENABLE_MAILSENDER              "Enables support for sending emails via sendgrid.com (requires libcurl)"                        OFF)
 option(ENABLE_CPPTRACE                "Enables cpptrace stack tracing; can be disabled if using other tools like GDB"                 ON)
 
@@ -67,8 +68,9 @@ message(STATUS
     USE_PCH_OLD               Use precompiled headers
     BUILD_FOR_HOST_CPU        Build specifically for the host CPU via `-march=native` (might not run on different machines)
     USE_SCRIPTS               Build scripts
-    BUILD_EXTRACTORS          Build extractors
-    BUILD_REALMMERGE          Build helper tool for merging character databases
+    SCRIPT_LIB_ELUNA          Build Eluna LUA Script Engine
+    USE_EXTRACTORS            Build extractors
+    USE_REALMMERGE            Build helper tool for merging character databases
     ENABLE_MAILSENDER         Enables support for sending emails via sendgrid.com (requires libcurl)
     SUPPORTED_CLIENT_BUILD    Client version the core will support
     ENABLE_CPPTRACE           Enables cpptrace stack tracing; can be disabled if using other tools like GDB
