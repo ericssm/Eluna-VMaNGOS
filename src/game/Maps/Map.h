@@ -41,6 +41,7 @@
 
 #ifdef ENABLE_ELUNA
 #include "LuaValue.h"
+#include "ElunaMgr.h"
 #endif
 
 #include <bitset>
@@ -616,8 +617,7 @@ class Map : public GridRefManager<NGridType>
         void RemoveBones(Corpse* corpse);
 
 #ifdef ENABLE_ELUNA
-        Eluna* GetEluna() const { return eluna.get(); }
-
+        Eluna* GetEluna() const { return sElunaMgr->Get(m_elunaInfo); }
         LuaVal lua_data = LuaVal({});
 #endif
 
@@ -978,7 +978,7 @@ class Map : public GridRefManager<NGridType>
         };
 
 #ifdef ENABLE_ELUNA
-        std::unique_ptr<Eluna> eluna;
+        ElunaInfo m_elunaInfo;
 #endif
 
     public:
