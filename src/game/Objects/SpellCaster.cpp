@@ -2402,7 +2402,7 @@ time_t SpellCaster::GetSpellCooldownDelay(uint32 spellId)
 	SpellEntry const* spellEntry = sSpellMgr.GetSpellEntry(spellId);
 	TimePoint expireTime;
 	bool isInfinite;
-	bool spellCDFound = GetExpireTime(*spellEntry, expireTime, isInfinite);
+	bool spellCDFound = GetExpireTime(spellEntry, expireTime, isInfinite);
 
 	auto currTime = sWorld.GetCurrentClockTime();
     std::chrono::system_clock::duration duration = expireTime - currTime;

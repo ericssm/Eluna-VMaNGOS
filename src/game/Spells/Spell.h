@@ -328,6 +328,8 @@ class Spell
 
         uint32 GetPowerCost() const { return m_powerCost; }
 
+        SpellEntry const* GetSpellProto() const { return m_spellInfo; }
+
         void UpdatePointers();                              // must be used at call Spell code after time delay (non triggered spell cast/update spell call/etc)
 
         bool CheckTargetCreatureType(Unit* target) const;

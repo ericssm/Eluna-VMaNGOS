@@ -538,6 +538,19 @@ else()
   )
 endif()
 
+if(SCRIPT_LIB_ELUNA)
+    file(GLOB SRC_GRP_ELUNA 
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.h
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/hooks/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/hooks/*.h
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/methods/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/methods/VMangos/*.h
+    )
+
+	list(APPEND game_SRCS ${SRC_GRP_ELUNA})
+endif()
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/AI
@@ -618,19 +631,11 @@ source_group("Anticheat"
 )
 
 if(SCRIPT_LIB_ELUNA)
-    file(GLOB SRC_GRP_ELUNA 
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.cpp
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/*.h
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/hooks/*.cpp
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/hooks/*.h
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/methods/*.cpp
-        ${CMAKE_SOURCE_DIR}/src/modules/Eluna/methods/VMangos/*.h
-    )
     source_group("Eluna" FILES ${SRC_GRP_ELUNA})
 endif()
+
 add_library(game STATIC
   ${game_SRCS}
-  $<$<BOOL:${SCRIPT_LIB_ELUNA}>:${SRC_GRP_ELUNA}>
 )
 mangos_target_flags(game)
 if(GAME_EXTRA_CXX_FLAGS)
